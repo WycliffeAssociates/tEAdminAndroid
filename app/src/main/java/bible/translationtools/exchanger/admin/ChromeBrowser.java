@@ -1,4 +1,4 @@
-package org.wycliffeassociates.translationexchange.admin;
+package bible.translationtools.exchanger.admin;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

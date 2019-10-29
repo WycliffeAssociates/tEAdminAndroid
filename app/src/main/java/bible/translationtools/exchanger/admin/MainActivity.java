@@ -1,4 +1,4 @@
-package org.wycliffeassociates.translationexchange.admin;
+package bible.translationtools.exchanger.admin;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,10 +7,8 @@ import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.DownloadListener;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -35,6 +33,7 @@ public class MainActivity extends Activity {
         browser = new ChromeBrowser(MainActivity.this);
         webView = findViewById(R.id.web_view);
 
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(browser);
         webView.setDownloadListener(new DownloadListener() {
@@ -52,6 +51,8 @@ public class MainActivity extends Activity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setAllowUniversalAccessFromFileURLs(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setMixedContentMode(0);
         webSettings.setUserAgentString(webSettings.getUserAgentString() + " TranslationExchangeClient");
 
         webView.loadUrl("file:///android_asset/build/index.html");
