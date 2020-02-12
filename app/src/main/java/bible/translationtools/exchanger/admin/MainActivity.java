@@ -10,6 +10,8 @@ import android.view.View;
 import android.webkit.*;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class MainActivity extends Activity {
 
     private WebView webView;
@@ -41,9 +43,20 @@ public class MainActivity extends Activity {
             public void onDownloadStart(String url, String userAgent,
                                         String contentDisposition, String mimetype,
                                         long contentLength) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
+
+                if(url.contains("data")) {
+                    browser.urlData = new UrlData(Uri.decode(url));
+                    //File file = data.save(getBaseContext());
+                    //Uri uri = Uri.fromFile(file);
+                    Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                    i.putExtra(Intent.EXTRA_TITLE, "file." + browser.urlData.getExtension());
+                    i.setType(browser.urlData.mimeType);
+                    startActivityForResult(i, ChromeBrowser.FILESAVER_RESULTCODE);
+                } else {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }
             }
         });
 
@@ -69,11 +82,23 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+
+        if(resultCode != RESULT_OK) return;
+
         if (requestCode == ChromeBrowser.FILECHOOSER_RESULTCODE) {
             if (null == browser.mUploadMessages) {
                 return;
             }
             browser.handleUploadMessages(resultCode, intent);
+        } else if(requestCode == ChromeBrowser.FILESAVER_RESULTCODE) {
+            try {
+                Uri fileUri = intent.getData();
+                browser.urlData.save(this, fileUri);
+
+                Toast.makeText(this, R.string.saved_success, Toast.LENGTH_SHORT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

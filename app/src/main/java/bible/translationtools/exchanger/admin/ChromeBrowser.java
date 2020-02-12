@@ -13,9 +13,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 public class ChromeBrowser extends WebChromeClient {
-    public static final int FILECHOOSER_RESULTCODE   = 1;
+    public static final int FILECHOOSER_RESULTCODE = 1;
+    public static final int FILESAVER_RESULTCODE = 2;
+
     protected ValueCallback<Uri[]> mUploadMessages;
     private MainActivity activity;
+
+    public UrlData urlData;
 
     public ChromeBrowser(Context c) {
         activity = (MainActivity) c;
