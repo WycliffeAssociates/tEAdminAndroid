@@ -46,8 +46,6 @@ public class MainActivity extends Activity {
 
                 if(url.contains("data")) {
                     browser.urlData = new UrlData(Uri.decode(url));
-                    //File file = data.save(getBaseContext());
-                    //Uri uri = Uri.fromFile(file);
                     Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                     i.putExtra(Intent.EXTRA_TITLE, "file." + browser.urlData.getExtension());
                     i.setType(browser.urlData.mimeType);
